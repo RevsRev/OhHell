@@ -12,11 +12,12 @@ public class OhHellPanel extends JPanel {
     this.numRounds = numRounds;
     rounds = new OhHellRow[numRounds];
 
-    round = new OhHellRow(4,12);
+    round = new OhHellRow(4, 1, 12);
+    round.setDealer(2);
     rounds[0] = round;
     add(rounds[0]);
 
-    setSize(numPlayers*80 + 80, numRounds*40 + 40);
+    setSize((numPlayers + 2)*200, numRounds*40 + 40);
     setVisible(true);
     setLayout(null); //change this later.
   }

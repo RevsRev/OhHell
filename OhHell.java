@@ -7,7 +7,7 @@ public class OhHell {
 
   public OhHell(int numPlayers, int numRounds) {
     ohHellPanel = new OhHellPanel(numPlayers, numRounds);
-    ohHellFrame.setSize(500,500);
+    ohHellFrame.setSize(1000,1000);
     ohHellFrame.add(ohHellPanel);
     ohHellFrame.setLayout(null);
     ohHellFrame.setVisible(true);
