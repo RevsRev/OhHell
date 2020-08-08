@@ -6,14 +6,16 @@ public class OhHellRow extends JPanel {
   private int numPeople;
   private int roundNumber;
   private int roundCards; //the number of cards dealt to each player in the round.
+  private String type; //the type of row we consider - either placing bets or submitting scores.
 
   private JLabel roundLabel;
   private SpinnerModel spinnerModel;
   private JSpinner[] roundScores;
-  private JButton submitButton = new JButton("Submit Bets");
+  private JButton submitButton;
 
-  public OhHellRow(int numPeople, int roundNumber, int roundCards) {
+  public OhHellRow(int numPeople, int roundNumber, int roundCards, String type) {
     super();
+    this.type = type;
     this.numPeople = numPeople;
     this.roundNumber = roundNumber;
     this.roundCards = roundCards;
@@ -21,12 +23,22 @@ public class OhHellRow extends JPanel {
   }
 
   public void setDealer(int dealerIndex) {
-    roundScores[dealerIndex].getEditor().getComponent(0).setBackground(Color.green);
+    roundScores[dealerIndex].getEditor().getComponent(0).setBackground(Color.gray);
   }
 
-  private void initialiseLabels() {
-    roundLabel = new JLabel(Integer.toString(roundNumber));
+  private void initialiseLabels() throws InvalidRowTypeException {
 
+    try {
+      if (type == "betting") {
+        submitButton = new JButton("Submit Bets");
+      } else if (type == "scoring") {
+        submitButton = new JButton("Submit Scores");
+      } else {
+        throw new InvalidRowTypeException("\" " + type + " \" " + "is not a valid row type");
+      }
+    } catch(NullPointerException e) {
+      throw new InvalidRowTypeException("Row type was null");
+    }
     submitButton.setSize(80,40);
 
     submitButton.addActionListener(new ActionListener() {
@@ -34,6 +46,12 @@ public class OhHellRow extends JPanel {
         submitRound();
       }
     });
+
+    if (type == "betting") {
+      roundLabel = new JLabel(Integer.toString(roundNumber));
+    } else if (type == "scoring") {
+      roundLabel = new JLabel();
+    }
 
     roundScores = new JSpinner[numPeople];
 
@@ -61,9 +79,23 @@ public class OhHellRow extends JPanel {
     }
   }
 
+  public int[] getRoundScores() {
+    int[] scores = new int[roundScores.length];
+
+    for (int i=0; i < scores.length; i++) {
+      scores[i] = (Integer)roundScores[i].getValue();
+    }
+    return scores;
+  }
+
   private void initialisePanel() {
 
-    initialiseLabels();
+    try {
+      initialiseLabels();
+    } catch (InvalidRowTypeException e) {
+      e.printStackTrace();
+      System.exit(0);
+    }
     setLayout(new GridLayout(1, numPeople+2, 10, 10));
 
     add(roundLabel);
