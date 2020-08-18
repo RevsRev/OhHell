@@ -16,6 +16,7 @@ public class OhHell {
 
   public static void main(String []args) {
     OhHell ohHell = new OhHell(4,12);
+    ohHell.ohHellPanel.play();
   }
 
 }

@@ -7,6 +7,7 @@ public class OhHellRow extends JPanel {
   private int roundNumber;
   private int roundCards; //the number of cards dealt to each player in the round.
   private String type; //the type of row we consider - either placing bets or submitting scores.
+  public boolean submitted;
 
   private JLabel roundLabel;
   private SpinnerModel spinnerModel;
@@ -19,6 +20,7 @@ public class OhHellRow extends JPanel {
     this.numPeople = numPeople;
     this.roundNumber = roundNumber;
     this.roundCards = roundCards;
+    this.submitted = false;
     initialisePanel();
   }
 
@@ -63,6 +65,9 @@ public class OhHellRow extends JPanel {
 
   public void submitRound() {
     int counter = 0;
+
+    if (submitted) { return; }
+
     for (int i=0; i<numPeople; i++) {
       counter += (Integer)roundScores[i].getValue();
     }
@@ -76,6 +81,7 @@ public class OhHellRow extends JPanel {
         spinnerModel = new SpinnerNumberModel(counter,0,roundCards,0);
         roundScores[i].setModel(spinnerModel);
       }
+      submitted = true; //once the round is classed as submitted, we may not go back.
     }
   }
 
